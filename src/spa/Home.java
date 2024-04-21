@@ -4,10 +4,10 @@
  */
 package spa;
 
-/**
- *
- * @author crist
- */
+import java.awt.BorderLayout;
+import javax.swing.JPanel;
+
+
 public class Home extends javax.swing.JFrame {
 
     /**
@@ -15,6 +15,7 @@ public class Home extends javax.swing.JFrame {
      */
     public Home() {
         initComponents();
+        setLocationRelativeTo(null);
     }
 
     /**
@@ -32,6 +33,7 @@ public class Home extends javax.swing.JFrame {
         btnProfessionals = new javax.swing.JButton();
         btnClient = new javax.swing.JButton();
         btnReports = new javax.swing.JButton();
+        jpContainer = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -46,60 +48,110 @@ public class Home extends javax.swing.JFrame {
         });
 
         btnServices.setText("Servicios");
+        btnServices.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnServicesActionPerformed(evt);
+            }
+        });
 
         btnProfessionals.setText("Profesionales");
+        btnProfessionals.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnProfessionalsActionPerformed(evt);
+            }
+        });
 
         btnClient.setText("Clientes");
+        btnClient.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnClientActionPerformed(evt);
+            }
+        });
 
         btnReports.setText("Informes");
+        btnReports.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnReportsActionPerformed(evt);
+            }
+        });
+
+        jpContainer.setBackground(new java.awt.Color(153, 153, 153));
+
+        javax.swing.GroupLayout jpContainerLayout = new javax.swing.GroupLayout(jpContainer);
+        jpContainer.setLayout(jpContainerLayout);
+        jpContainerLayout.setHorizontalGroup(
+            jpContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        jpContainerLayout.setVerticalGroup(
+            jpContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 415, Short.MAX_VALUE)
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(167, 167, 167)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(36, 36, 36)
+                .addComponent(btnAppointment, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 43, Short.MAX_VALUE)
+                .addComponent(btnServices, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(35, 35, 35)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lbTitle)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnServices)
-                            .addComponent(btnAppointment)
-                            .addComponent(btnClient)
-                            .addComponent(btnReports)))
-                    .addComponent(btnProfessionals)
-                    .addComponent(lbTitle))
-                .addContainerGap(158, Short.MAX_VALUE))
+                        .addComponent(btnProfessionals)
+                        .addGap(39, 39, 39)
+                        .addComponent(btnClient, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(45, 45, 45)
+                        .addComponent(btnReports, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(24, 24, 24))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jpContainer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(12, 12, 12)
+                .addGap(5, 5, 5)
                 .addComponent(lbTitle)
-                .addGap(18, 18, 18)
-                .addComponent(btnAppointment)
-                .addGap(18, 18, 18)
-                .addComponent(btnServices)
-                .addGap(18, 18, 18)
-                .addComponent(btnProfessionals)
-                .addGap(18, 18, 18)
-                .addComponent(btnClient)
-                .addGap(18, 18, 18)
-                .addComponent(btnReports)
-                .addGap(35, 35, 35))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnServices)
+                    .addComponent(btnAppointment)
+                    .addComponent(btnProfessionals)
+                    .addComponent(btnClient)
+                    .addComponent(btnReports))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jpContainer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAppointmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAppointmentActionPerformed
-       
-       Appointment apt = new Appointment();
-       apt.setVisible(true);
-            
-        //Close current window
-       dispose();
+       Appointment ap = new Appointment();
+        showPanel(ap);
     }//GEN-LAST:event_btnAppointmentActionPerformed
+
+    private void btnServicesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnServicesActionPerformed
+        
+    }//GEN-LAST:event_btnServicesActionPerformed
+
+    private void btnProfessionalsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProfessionalsActionPerformed
+       
+    }//GEN-LAST:event_btnProfessionalsActionPerformed
+
+    private void btnClientActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClientActionPerformed
+      
+    }//GEN-LAST:event_btnClientActionPerformed
+
+    private void btnReportsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportsActionPerformed
+
+    }//GEN-LAST:event_btnReportsActionPerformed
 
     /**
      * @param args the command line arguments
@@ -142,6 +194,17 @@ public class Home extends javax.swing.JFrame {
     private javax.swing.JButton btnProfessionals;
     private javax.swing.JButton btnReports;
     private javax.swing.JButton btnServices;
+    private javax.swing.JPanel jpContainer;
     private javax.swing.JLabel lbTitle;
     // End of variables declaration//GEN-END:variables
+    
+    private void showPanel(JPanel p){
+       p.setSize(725,415);
+       p.setLocation(0,0);
+       
+       jpContainer.removeAll();
+       jpContainer.add(p,BorderLayout.CENTER);
+       jpContainer.revalidate();
+       jpContainer.repaint();
+    }
 }

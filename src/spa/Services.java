@@ -4,13 +4,12 @@
  */
 package spa;
 
-
-public class Appointment extends javax.swing.JPanel {
+public class Services extends javax.swing.JPanel {
 
     /**
      * Creates new form Appointment2
      */
-    public Appointment() {
+    public Services() {
         initComponents();
     }
 
