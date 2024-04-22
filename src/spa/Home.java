@@ -7,7 +7,6 @@ package spa;
 import java.awt.BorderLayout;
 import javax.swing.JPanel;
 
-
 public class Home extends javax.swing.JFrame {
 
     /**
@@ -133,20 +132,20 @@ public class Home extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAppointmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAppointmentActionPerformed
-       Appointment ap = new Appointment();
+        Appointment ap = new Appointment();
         showPanel(ap);
     }//GEN-LAST:event_btnAppointmentActionPerformed
 
     private void btnServicesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnServicesActionPerformed
-        
+
     }//GEN-LAST:event_btnServicesActionPerformed
 
     private void btnProfessionalsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProfessionalsActionPerformed
-       
+
     }//GEN-LAST:event_btnProfessionalsActionPerformed
 
     private void btnClientActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClientActionPerformed
-      
+
     }//GEN-LAST:event_btnClientActionPerformed
 
     private void btnReportsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportsActionPerformed
@@ -197,14 +196,14 @@ public class Home extends javax.swing.JFrame {
     private javax.swing.JPanel jpContainer;
     private javax.swing.JLabel lbTitle;
     // End of variables declaration//GEN-END:variables
-    
-    private void showPanel(JPanel p){
-       p.setSize(725,415);
-       p.setLocation(0,0);
-       
-       jpContainer.removeAll();
-       jpContainer.add(p,BorderLayout.CENTER);
-       jpContainer.revalidate();
-       jpContainer.repaint();
+
+    private void showPanel(JPanel p) {
+        p.setSize(725, 415);
+        p.setLocation(0, 0);
+
+        jpContainer.removeAll();
+        jpContainer.add(p, BorderLayout.CENTER);
+        jpContainer.revalidate();
+        jpContainer.repaint();
     }
 }

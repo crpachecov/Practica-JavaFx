@@ -5,7 +5,7 @@
 package spa;
 
 import java.awt.Component;
-
+import javax.swing.JOptionPane;
 
 public class Register extends javax.swing.JFrame {
 
@@ -14,6 +14,8 @@ public class Register extends javax.swing.JFrame {
      */
     public Register() {
         initComponents();
+        setLocationRelativeTo(null);
+        setResizable(false);
     }
 
     /**
@@ -40,6 +42,10 @@ public class Register extends javax.swing.JFrame {
         txtFdPhone = new javax.swing.JFormattedTextField();
         lblEmail = new javax.swing.JLabel();
         txtFdEmail = new javax.swing.JTextField();
+        lblPassword = new javax.swing.JLabel();
+        fieldPassword = new javax.swing.JPasswordField();
+        lblSpecialization = new javax.swing.JLabel();
+        txtFdSpecialization = new javax.swing.JTextField();
         btnRegister = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -81,7 +87,16 @@ public class Register extends javax.swing.JFrame {
 
         lblEmail.setText("Email");
 
+        lblPassword.setText("Contraseña");
+
+        lblSpecialization.setText("Especialidad");
+
         btnRegister.setText("Registrar");
+        btnRegister.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRegisterActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jpContainerLayout = new javax.swing.GroupLayout(jpContainer);
         jpContainer.setLayout(jpContainerLayout);
@@ -90,42 +105,55 @@ public class Register extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpContainerLayout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(btnRegister)
-                .addGap(178, 178, 178))
+                .addGap(164, 164, 164))
             .addGroup(jpContainerLayout.createSequentialGroup()
-                .addGroup(jpContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jpContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jpContainerLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(btnBack)
-                        .addGap(119, 119, 119)
-                        .addComponent(lblTitle))
-                    .addGroup(jpContainerLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(txtFdName, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jpContainerLayout.createSequentialGroup()
                         .addGap(82, 82, 82)
-                        .addGroup(jpContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(jpContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jpContainerLayout.createSequentialGroup()
-                                .addComponent(lblLastName)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(txtFdLastName))
-                            .addGroup(jpContainerLayout.createSequentialGroup()
-                                .addComponent(lblName)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(txtFdName, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jpContainerLayout.createSequentialGroup()
-                                .addComponent(lblEmail)
-                                .addGap(29, 29, 29)
-                                .addComponent(txtFdEmail))
-                            .addGroup(jpContainerLayout.createSequentialGroup()
-                                .addComponent(lblPhone)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(txtFdPhone))
+                                .addGroup(jpContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lblLastName)
+                                    .addComponent(lblName))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(txtFdLastName, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jpContainerLayout.createSequentialGroup()
                                 .addGroup(jpContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(lblAddress)
                                     .addComponent(lblDni))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(jpContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(txtFdAddress, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
+                                    .addComponent(txtFdDni)))
+                            .addGroup(jpContainerLayout.createSequentialGroup()
                                 .addGroup(jpContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtFdDni, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtFdAddress))))))
-                .addContainerGap(112, Short.MAX_VALUE))
+                                    .addGroup(jpContainerLayout.createSequentialGroup()
+                                        .addComponent(lblPhone)
+                                        .addGap(26, 26, 26)
+                                        .addComponent(txtFdPhone, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(jpContainerLayout.createSequentialGroup()
+                                        .addComponent(lblSpecialization)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(txtFdSpecialization, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(jpContainerLayout.createSequentialGroup()
+                                        .addGroup(jpContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(lblPassword)
+                                            .addComponent(lblEmail))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addGroup(jpContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(txtFdEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(fieldPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addGap(0, 0, Short.MAX_VALUE))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jpContainerLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(btnBack)
+                        .addGap(119, 119, 119)
+                        .addComponent(lblTitle)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap(75, Short.MAX_VALUE))
         );
         jpContainerLayout.setVerticalGroup(
             jpContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -154,13 +182,21 @@ public class Register extends javax.swing.JFrame {
                 .addGroup(jpContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblPhone)
                     .addComponent(txtFdPhone, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jpContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblEmail)
                     .addComponent(txtFdEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jpContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblPassword)
+                    .addComponent(fieldPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jpContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblSpecialization)
+                    .addComponent(txtFdSpecialization, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(13, 13, 13)
                 .addComponent(btnRegister)
-                .addGap(29, 29, 29))
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -178,11 +214,30 @@ public class Register extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
-       Login lg = new Login();
-       lg.setVisible(true);
-       
-       dispose();
+        Login lg = new Login();
+        lg.setVisible(true);
+
+        dispose();
     }//GEN-LAST:event_btnBackActionPerformed
+
+    private void btnRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegisterActionPerformed
+        String[] data = new String[8];
+        char[] passwordChars = fieldPassword.getPassword();
+        String password = new String(passwordChars);
+
+        boolean allow = validatePassword(password);
+        if (allow == true && dataIsEmpity(data,password)==true) {
+            submitData(data);
+            Login lg = new Login();
+            lg.setVisible(true);
+
+            //Close current window
+            dispose();
+        } else {
+
+            JOptionPane.showMessageDialog(this, "La contraseña no debe contener los caracteres $,%,&,/,*,/,-,ñ.", "Error de contraseña", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnRegisterActionPerformed
 
     /**
      * @param args the command line arguments
@@ -219,16 +274,53 @@ public class Register extends javax.swing.JFrame {
         });
     }
 
+    private boolean dataIsEmpity(String[] data, String password) {
+        data[0] = txtFdName.getText();
+        data[1] = txtFdLastName.getText();
+        data[2] = txtFdDni.getText();
+        data[3] = txtFdAddress.getText();
+        data[4] = txtFdPhone.getText();
+        data[5] = txtFdEmail.getText();
+        data[6] = password;
+        data[7] = txtFdSpecialization.getText();
+
+        if ((data[0].isEmpty() == true && data[1].isEmpty() == true && data[2].isEmpty() == true && data[3].isEmpty() == true && data[4].isEmpty() == true && data[5].isEmpty() == true && data[6].isEmpty()) == true && data[7].isEmpty() == true) {
+            return true;
+        } else {
+            JOptionPane.showMessageDialog(this, "CAMPOS VACIONS.", "Error de campos sin llenar", JOptionPane.ERROR_MESSAGE);
+        }
+        return false;
+    }
+    
+     private void submitData(String[] data) {
+        //Hacer querys
+    }
+
+    private boolean validatePassword(String password) {
+        String charactersDeny = "$,%,&,/,*,/,-,ñ";
+
+        for (int i = 0; i < password.length(); i++) {
+            char character = password.charAt(i);
+            if (charactersDeny.indexOf(character) != -1) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBack;
     private javax.swing.JButton btnRegister;
+    private javax.swing.JPasswordField fieldPassword;
     private javax.swing.JPanel jpContainer;
     private javax.swing.JLabel lblAddress;
     private javax.swing.JLabel lblDni;
     private javax.swing.JLabel lblEmail;
     private javax.swing.JLabel lblLastName;
     private javax.swing.JLabel lblName;
+    private javax.swing.JLabel lblPassword;
     private javax.swing.JLabel lblPhone;
+    private javax.swing.JLabel lblSpecialization;
     private javax.swing.JLabel lblTitle;
     private javax.swing.JTextField txtFdAddress;
     private javax.swing.JFormattedTextField txtFdDni;
@@ -236,5 +328,7 @@ public class Register extends javax.swing.JFrame {
     private javax.swing.JTextField txtFdLastName;
     private javax.swing.JTextField txtFdName;
     private javax.swing.JFormattedTextField txtFdPhone;
+    private javax.swing.JTextField txtFdSpecialization;
     // End of variables declaration//GEN-END:variables
+
 }
