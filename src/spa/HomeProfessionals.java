@@ -7,12 +7,12 @@ package spa;
 import java.awt.BorderLayout;
 import javax.swing.JPanel;
 
-public class Home extends javax.swing.JFrame {
+public class HomeProfessionals extends javax.swing.JFrame {
 
     /**
      * Creates new form Home
      */
-    public Home() {
+    public HomeProfessionals() {
         initComponents();
         setLocationRelativeTo(null);
     }
@@ -28,9 +28,6 @@ public class Home extends javax.swing.JFrame {
 
         lbTitle = new javax.swing.JLabel();
         btnAppointment = new javax.swing.JButton();
-        btnServices = new javax.swing.JButton();
-        btnProfessionals = new javax.swing.JButton();
-        btnClient = new javax.swing.JButton();
         btnReports = new javax.swing.JButton();
         jpContainer = new javax.swing.JPanel();
 
@@ -43,27 +40,6 @@ public class Home extends javax.swing.JFrame {
         btnAppointment.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAppointmentActionPerformed(evt);
-            }
-        });
-
-        btnServices.setText("Servicios");
-        btnServices.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnServicesActionPerformed(evt);
-            }
-        });
-
-        btnProfessionals.setText("Profesionales");
-        btnProfessionals.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnProfessionalsActionPerformed(evt);
-            }
-        });
-
-        btnClient.setText("Clientes");
-        btnClient.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnClientActionPerformed(evt);
             }
         });
 
@@ -92,20 +68,16 @@ public class Home extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(36, 36, 36)
+                .addGap(154, 154, 154)
                 .addComponent(btnAppointment, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 43, Short.MAX_VALUE)
-                .addComponent(btnServices, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(35, 35, 35)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 64, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lbTitle)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnProfessionals)
-                        .addGap(39, 39, 39)
-                        .addComponent(btnClient, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(45, 45, 45)
-                        .addComponent(btnReports, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(24, 24, 24))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(lbTitle)
+                        .addGap(314, 314, 314))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(btnReports, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(167, 167, 167))))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jpContainer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -118,10 +90,7 @@ public class Home extends javax.swing.JFrame {
                 .addComponent(lbTitle)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnServices)
                     .addComponent(btnAppointment)
-                    .addComponent(btnProfessionals)
-                    .addComponent(btnClient)
                     .addComponent(btnReports))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jpContainer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -136,23 +105,8 @@ public class Home extends javax.swing.JFrame {
         showPanel(ap);
     }//GEN-LAST:event_btnAppointmentActionPerformed
 
-    private void btnServicesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnServicesActionPerformed
-        Services sv = new Services();
-        showPanel(sv);
-    }//GEN-LAST:event_btnServicesActionPerformed
-
-    private void btnProfessionalsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProfessionalsActionPerformed
-        Professionals pf = new Professionals();
-        showPanel(pf);
-    }//GEN-LAST:event_btnProfessionalsActionPerformed
-
-    private void btnClientActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClientActionPerformed
-        Clients clt = new Clients();
-        showPanel(clt);
-    }//GEN-LAST:event_btnClientActionPerformed
-
     private void btnReportsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportsActionPerformed
-        
+
     }//GEN-LAST:event_btnReportsActionPerformed
 
     /**
@@ -172,30 +126,28 @@ public class Home extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Home.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(HomeProfessionals.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Home.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(HomeProfessionals.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Home.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(HomeProfessionals.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Home.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(HomeProfessionals.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Home().setVisible(true);
+                new HomeProfessionals().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAppointment;
-    private javax.swing.JButton btnClient;
-    private javax.swing.JButton btnProfessionals;
     private javax.swing.JButton btnReports;
-    private javax.swing.JButton btnServices;
     private javax.swing.JPanel jpContainer;
     private javax.swing.JLabel lbTitle;
     // End of variables declaration//GEN-END:variables

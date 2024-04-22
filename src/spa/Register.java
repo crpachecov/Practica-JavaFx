@@ -287,7 +287,7 @@ public class Register extends javax.swing.JFrame {
         if ((data[0].isEmpty() == true && data[1].isEmpty() == true && data[2].isEmpty() == true && data[3].isEmpty() == true && data[4].isEmpty() == true && data[5].isEmpty() == true && data[6].isEmpty()) == true && data[7].isEmpty() == true) {
             return true;
         } else {
-            JOptionPane.showMessageDialog(this, "CAMPOS VACIONS.", "Error de campos sin llenar", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "CAMPOS VACIOS.", "Error de campos sin llenar", JOptionPane.ERROR_MESSAGE);
         }
         return false;
     }
