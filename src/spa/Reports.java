@@ -4,32 +4,17 @@
  */
 package spa;
 
-import java.awt.BorderLayout;
-import java.awt.Point;
-import javax.swing.JButton;
-import javax.swing.JPanel;
-
-public class HomeProfessionals extends Home {
-    
-    private Point location;
+/**
+ *
+ * @author crist
+ */
+public class Reports extends javax.swing.JFrame {
 
     /**
-     * Creates new form Home
+     * Creates new form Reports
      */
-    public HomeProfessionals() {
+    public Reports() {
         initComponents();
-        setLocationRelativeTo(null);
-        
-        location = getLocationFather(super.getButtonServices());
-        super.getButtonAppointment().setLocation(location);
-        
-        location = getLocationFather(super.getButtonClients());
-        super.getButtonReports().setLocation(location);
-        
-        super.getButtonServices().setVisible(false);
-        super.getButtonProfessionals().setVisible(false);
-        super.getButtonClients().setVisible(false);
-        
     }
 
     /**
@@ -47,11 +32,11 @@ public class HomeProfessionals extends Home {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 730, Short.MAX_VALUE)
+            .addGap(0, 400, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 540, Short.MAX_VALUE)
+            .addGap(0, 300, Short.MAX_VALUE)
         );
 
         pack();
@@ -74,31 +59,24 @@ public class HomeProfessionals extends Home {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(HomeProfessionals.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Reports.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(HomeProfessionals.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Reports.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(HomeProfessionals.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Reports.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(HomeProfessionals.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Reports.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new HomeProfessionals().setVisible(true);
+                new Reports().setVisible(true);
             }
         });
     }
-    
-    public Point getLocationFather(JButton button){
-        Point location = button.getLocation();
-        return location;
-    } 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
-
 }

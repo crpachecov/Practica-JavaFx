@@ -196,12 +196,8 @@ public class Appointment extends javax.swing.JPanel {
         data[3] = date;
         data[4] = combxService.getSelectedItem().toString();
         data[5] = combxProfessional.getSelectedItem().toString();
-        System.out.println(data[3]);
-        System.out.println(data[4]);
-        System.out.println(data[5]);
-        
-
-        if ((data[0].isEmpty() == true && data[1].isEmpty() == true && data[2].isEmpty() == true && data[3].isEmpty() == true && data[4]!= "null" && data[5] != "null")){
+    
+        if ((data[0].isEmpty() == true && data[1].isEmpty() == true && data[2].isEmpty() == true && data[3].isEmpty() == true && data[4].equals("null") && data[5].equals("null"))){
             return true;
         } else {
             JOptionPane.showMessageDialog(this, "CAMPOS VACIOS.", "Error de campos sin llenar", JOptionPane.ERROR_MESSAGE);

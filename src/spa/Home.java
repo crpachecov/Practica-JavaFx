@@ -5,6 +5,7 @@
 package spa;
 
 import java.awt.BorderLayout;
+import javax.swing.JButton;
 import javax.swing.JPanel;
 
 public class Home extends javax.swing.JFrame {
@@ -130,29 +131,49 @@ public class Home extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+    
+    public JButton getButtonAppointment() {
+        return btnAppointment;
+    }
+    
     private void btnAppointmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAppointmentActionPerformed
         Appointment ap = new Appointment();
         showPanel(ap);
     }//GEN-LAST:event_btnAppointmentActionPerformed
 
+    public JButton getButtonServices() {
+        return btnServices;
+    }
+
     private void btnServicesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnServicesActionPerformed
         Services sv = new Services();
         showPanel(sv);
     }//GEN-LAST:event_btnServicesActionPerformed
-
+    
+    public JButton getButtonProfessionals() {
+        return btnProfessionals;
+    }
+    
     private void btnProfessionalsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProfessionalsActionPerformed
         Professionals pf = new Professionals();
         showPanel(pf);
     }//GEN-LAST:event_btnProfessionalsActionPerformed
-
+    
+    public JButton getButtonClients() {
+        return btnClient;
+    }
+    
     private void btnClientActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClientActionPerformed
         Clients clt = new Clients();
         showPanel(clt);
     }//GEN-LAST:event_btnClientActionPerformed
-
+    
+    public JButton getButtonReports() {
+        return btnReports;
+    }
+    
     private void btnReportsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportsActionPerformed
-        
+
     }//GEN-LAST:event_btnReportsActionPerformed
 
     /**

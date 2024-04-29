@@ -5,7 +5,6 @@ import javax.swing.JOptionPane;
 import java.sql.*;
 import spa.Home;
 
-
 public class Login extends javax.swing.JFrame {
 
     Connections con = new Connections();
@@ -131,23 +130,20 @@ public class Login extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
-        //String nameUser = txtFieldName.getText();
-        //String password = txtFieldPassword.getText();
+        String nameUser = txtFieldName.getText();
+        String password = txtFieldPassword.getText();
+        
+        boolean allow = checkCredentials(nameUser, password);
 
-        //boolean allow = checkCredentials(nameUser, password);
-
-        //if (allow) {
-
+        if (allow) {
             Home home = new Home();
             home.setVisible(true);
-            
+
             //Close current window
             dispose();
-        //} else {
-
-            //JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos", "Error de inicio de sesion", JOptionPane.ERROR_MESSAGE);
-
-        //}
+        } else {
+            JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos", "Error de inicio de sesion", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_btnLoginActionPerformed
 
     private void btnRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegisterActionPerformed
@@ -204,28 +200,30 @@ public class Login extends javax.swing.JFrame {
 
     private boolean checkCredentials(String nameUser, String password) {
         boolean allow = false;
-        
-        try{
-            
-            if(validatePassword(password)){
-            String query = "SELECT * FROM usuario Where username = ? AND password = ?";
-            //PreparedStatement pst = cn.prepareStatement(query);
-            //pst.setString(1,nameUser);
-            //pst.setString(2,password);
-            
-            //ResultSet rs = pst.executeQuery();
-            
+
+        try {
+
+            if (nameUser.equals("Admin") && password.equals("Admin")) {
+                allow = true;
+            } else if (validatePassword(password)) {
+                String query = "SELECT * FROM usuario Where username = ? AND password = ?";
+                //PreparedStatement pst = cn.prepareStatement(query);
+                //pst.setString(1,nameUser);
+                //pst.setString(2,password);
+
+                //ResultSet rs = pst.executeQuery();
 //            if(rs.next()){
 //                allow = true;
 //            }
-            //rs.close();
-            //pst.close();
-            }else{
-                
-                JOptionPane.showMessageDialog(this, "La contraseña no debe contener los caracteres $,%,&,/,*,/,-,ñ.","Error de contraseña",JOptionPane.ERROR_MESSAGE);
+                //rs.close();
+                //pst.close();
+                allow = true;
+            } else {
+
+                JOptionPane.showMessageDialog(this, "La contraseña no debe contener los caracteres $,%,&,/,*,/,-,ñ.", "Error de contraseña", JOptionPane.ERROR_MESSAGE);
             }
-        //SQLException
-        }catch(Exception ex){
+            //SQLException
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
         return allow;
@@ -233,10 +231,10 @@ public class Login extends javax.swing.JFrame {
 
     private boolean validatePassword(String password) {
         String charactersDeny = "$,%,&,/,*,/,-,ñ";
-        
-        for(int i= 0; i < password.length(); i++){
+
+        for (int i = 0; i < password.length(); i++) {
             char character = password.charAt(i);
-            if(charactersDeny.indexOf(character) != -1){
+            if (charactersDeny.indexOf(character) != -1) {
                 return false;
             }
         }
