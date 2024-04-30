@@ -4,10 +4,16 @@
  */
 package spa;
 
+import config.Connections;
+import java.sql.*;
 import java.awt.Component;
+import java.sql.SQLException;
 import javax.swing.JOptionPane;
 
 public class Register extends javax.swing.JFrame {
+
+    Connections con = new Connections();
+    Connection cn = con.conectar();
 
     /**
      * Creates new form Register
@@ -50,7 +56,7 @@ public class Register extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jpContainer.setBackground(new java.awt.Color(102, 102, 102));
+        jpContainer.setBackground(new java.awt.Color(204, 204, 204));
 
         lblTitle.setFont(new java.awt.Font("Segoe UI", 3, 24)); // NOI18N
         lblTitle.setText("REGISTRO");
@@ -69,21 +75,13 @@ public class Register extends javax.swing.JFrame {
 
         lblDni.setText("N. Cedula");
 
-        try {
-            txtFdDni.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##########")));
-        } catch (java.text.ParseException ex) {
-            ex.printStackTrace();
-        }
+        txtFdDni.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
 
         lblAddress.setText("Dirección");
 
         lblPhone.setText("Telefono");
 
-        try {
-            txtFdPhone.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##########")));
-        } catch (java.text.ParseException ex) {
-            ex.printStackTrace();
-        }
+        txtFdPhone.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
 
         lblEmail.setText("Email");
 
@@ -222,11 +220,11 @@ public class Register extends javax.swing.JFrame {
 
     private void btnRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegisterActionPerformed
         String[] data = new String[8];
-        char[] passwordChars = fieldPassword.getPassword();
-        String password = new String(passwordChars);
+        String password = String.valueOf(fieldPassword.getPassword());
 
         boolean allow = validatePassword(password);
-        if (allow == true && dataIsEmpity(data,password)==true) {
+
+        if (allow == true && dataIsEmpity(data, password) == true) {
             submitData(data);
             Login lg = new Login();
             lg.setVisible(true);
@@ -284,16 +282,39 @@ public class Register extends javax.swing.JFrame {
         data[6] = password;
         data[7] = txtFdSpecialization.getText();
 
-        if ((data[0].isEmpty() == true && data[1].isEmpty() == true && data[2].isEmpty() == true && data[3].isEmpty() == true && data[4].isEmpty() == true && data[5].isEmpty() == true && data[6].isEmpty()) == true && data[7].isEmpty() == true) {
+        System.out.println("dni " + data[2].isEmpty());
+        System.out.println("telefono " + data[4].isEmpty());
+
+        if ((data[0].isEmpty() == false && data[1].isEmpty() == false && data[2].isEmpty() == false && data[3].isEmpty() == false && data[4].isEmpty() == false && data[5].isEmpty() == false && data[6].isEmpty() == false && data[7].isEmpty() == false)) {
             return true;
         } else {
             JOptionPane.showMessageDialog(this, "CAMPOS VACIOS.", "Error de campos sin llenar", JOptionPane.ERROR_MESSAGE);
         }
         return false;
     }
-    
-     private void submitData(String[] data) {
+
+    private void submitData(String[] data) {
         //Hacer querys
+        try {
+            String query = "INSERT INTO professionals (dni, name, last_name, address, phone_number, email, specialty, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            PreparedStatement pst = cn.prepareStatement(query);
+            pst.setString(1, data[2]);
+            pst.setString(2, data[0]);
+            pst.setString(3, data[1]);
+            pst.setString(4, data[3]);
+            pst.setString(5, data[4]);
+            pst.setString(6, data[5]);
+            pst.setString(7, data[7]);
+            pst.setString(8, data[6]);
+
+            System.out.println(pst.executeUpdate());
+
+            pst.close();
+        } catch (SQLException e) {
+            System.out.println(e);
+        }finally{
+            con.desconectar();
+        }
     }
 
     private boolean validatePassword(String password) {

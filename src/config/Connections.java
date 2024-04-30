@@ -17,6 +17,7 @@ public class Connections {
         try {
             Class.forName(driver);
             con = DriverManager.getConnection(url + bd, user, password);
+            System.out.println("Conexion Abierta");
         } catch (ClassNotFoundException | SQLException e) {
             System.out.println(e);
         }
@@ -26,6 +27,7 @@ public class Connections {
     public void desconectar(){
         try {
             con.close();
+            System.out.println("Conexion Cerrada");
         } catch (SQLException e) {
             System.out.println(e);
         }

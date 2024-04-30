@@ -8,7 +8,7 @@ import spa.Home;
 public class Login extends javax.swing.JFrame {
 
     Connections con = new Connections();
-    //Connection cn = con.getConnection();
+    Connection cn = con.conectar();
 
     /**
      * Creates new form Login
@@ -30,12 +30,12 @@ public class Login extends javax.swing.JFrame {
 
         lblTitle = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
-        lblName = new javax.swing.JLabel();
+        lblDni = new javax.swing.JLabel();
         lblPassword = new javax.swing.JLabel();
-        txtFieldPassword = new javax.swing.JTextField();
-        txtFieldName = new javax.swing.JTextField();
+        txtFieldDni = new javax.swing.JTextField();
         btnLogin = new javax.swing.JButton();
         btnRegister = new javax.swing.JButton();
+        txtFieldPassword = new javax.swing.JPasswordField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -46,7 +46,7 @@ public class Login extends javax.swing.JFrame {
 
         jPanel1.setBackground(new java.awt.Color(204, 204, 204));
 
-        lblName.setText("NOMBRE");
+        lblDni.setText("USUARIO");
 
         lblPassword.setText("CONTRASEÑA");
 
@@ -72,15 +72,13 @@ public class Login extends javax.swing.JFrame {
                 .addGap(118, 118, 118)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblPassword)
-                    .addComponent(lblName))
+                    .addComponent(lblDni))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(txtFieldName)
-                        .addComponent(txtFieldPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(btnRegister, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnLogin, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(txtFieldDni, javax.swing.GroupLayout.DEFAULT_SIZE, 145, Short.MAX_VALUE)
+                    .addComponent(btnRegister, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnLogin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(txtFieldPassword))
                 .addContainerGap(131, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -88,13 +86,13 @@ public class Login extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(72, 72, 72)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblName)
-                    .addComponent(txtFieldName, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lblDni)
+                    .addComponent(txtFieldDni, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblPassword)
-                    .addComponent(txtFieldPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(37, 37, 37)
+                    .addComponent(txtFieldPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(38, 38, 38)
                 .addComponent(btnLogin)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnRegister)
@@ -130,16 +128,20 @@ public class Login extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
-        String nameUser = txtFieldName.getText();
-        String password = txtFieldPassword.getText();
-        
-        boolean allow = checkCredentials(nameUser, password);
+        String dni = txtFieldDni.getText();
+        String password = String.valueOf(txtFieldPassword.getPassword());
 
-        if (allow) {
+        if (dni.equals("Admin") && password.equals("Admin")) {
+            con.desconectar();
             Home home = new Home();
             home.setVisible(true);
 
             //Close current window
+            dispose();
+        } else if (checkCredentials(dni, password)) {
+            HomeProfessionals hProf = new HomeProfessionals();
+            hProf.setVisible(true);
+
             dispose();
         } else {
             JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos", "Error de inicio de sesion", JOptionPane.ERROR_MESSAGE);
@@ -147,6 +149,7 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_btnLoginActionPerformed
 
     private void btnRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegisterActionPerformed
+        con.desconectar();
         Register rg = new Register();
         rg.setVisible(true);
         dispose();
@@ -191,40 +194,39 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JButton btnLogin;
     private javax.swing.JButton btnRegister;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JLabel lblName;
+    private javax.swing.JLabel lblDni;
     private javax.swing.JLabel lblPassword;
     private javax.swing.JLabel lblTitle;
-    private javax.swing.JTextField txtFieldName;
-    private javax.swing.JTextField txtFieldPassword;
+    private javax.swing.JTextField txtFieldDni;
+    private javax.swing.JPasswordField txtFieldPassword;
     // End of variables declaration//GEN-END:variables
 
-    private boolean checkCredentials(String nameUser, String password) {
+    private boolean checkCredentials(String dni, String password) {
         boolean allow = false;
 
         try {
+            if (validatePassword(password)) {
+                String query = "SELECT COUNT(*) FROM professionals WHERE dni = ? AND password = ?";
+                PreparedStatement pst = cn.prepareStatement(query);
+                pst.setString(1, dni);
+                pst.setString(2, password);
 
-            if (nameUser.equals("Admin") && password.equals("Admin")) {
-                allow = true;
-            } else if (validatePassword(password)) {
-                String query = "SELECT * FROM usuario Where username = ? AND password = ?";
-                //PreparedStatement pst = cn.prepareStatement(query);
-                //pst.setString(1,nameUser);
-                //pst.setString(2,password);
-
-                //ResultSet rs = pst.executeQuery();
-//            if(rs.next()){
-//                allow = true;
-//            }
-                //rs.close();
-                //pst.close();
-                allow = true;
+                ResultSet rs = pst.executeQuery();
+                if (rs.next()) {
+                    int rowCount = rs.getInt(1);
+                    allow = rowCount > 0;
+                }
+                rs.close();
+                pst.close();
             } else {
 
                 JOptionPane.showMessageDialog(this, "La contraseña no debe contener los caracteres $,%,&,/,*,/,-,ñ.", "Error de contraseña", JOptionPane.ERROR_MESSAGE);
             }
             //SQLException
-        } catch (Exception ex) {
+        } catch (SQLException ex) {
             ex.printStackTrace();
+        } finally {
+            con.desconectar();
         }
         return allow;
     }
