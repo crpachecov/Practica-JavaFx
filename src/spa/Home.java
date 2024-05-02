@@ -9,7 +9,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 public class Home extends javax.swing.JFrame {
-
+    
     /**
      * Creates new form Home
      */
