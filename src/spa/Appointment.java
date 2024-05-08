@@ -8,9 +8,12 @@ import com.toedter.calendar.JDateChooser;
 import config.Connections;
 import java.sql.*;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 public class Appointment extends javax.swing.JPanel {
 
@@ -19,9 +22,33 @@ public class Appointment extends javax.swing.JPanel {
     Connections con = new Connections();
     Connection cn = con.conectar();
 
+    DefaultTableModel ta = new DefaultTableModel() {
+
+        public boolean isCellEditable(int rows, int columns) {//Celdas no editables
+            return false;
+        }
+    };
+
     public Appointment() {
         initComponents();
-        serviceData = fillComboBoxs(combxService);
+
+        String[] columnNames = {"ID", "DNI", "Nombre", "Fecha", "Hora", "Servicio", "Profesional"};
+        ta.setColumnIdentifiers(columnNames);
+        tableAppointment.setModel(ta);
+
+        for (int i = 0; i < 5; i++) {
+            if (i != 2) {
+                if (i % 2 == 0) {
+                    tableAppointment.getColumnModel().getColumn(i).setPreferredWidth(10);
+                } else {
+                    tableAppointment.getColumnModel().getColumn(i).setPreferredWidth(30);
+                }
+            }
+        }
+
+        fillComboBoxs(combxService);
+        fillTable();
+
     }
 
     /**
@@ -34,12 +61,10 @@ public class Appointment extends javax.swing.JPanel {
     private void initComponents() {
 
         lblDni = new javax.swing.JLabel();
-        lblName = new javax.swing.JLabel();
         lblService = new javax.swing.JLabel();
         lblHour = new javax.swing.JLabel();
         lblDate = new javax.swing.JLabel();
         txtFdDni = new javax.swing.JTextField();
-        txtFdName = new javax.swing.JTextField();
         dChoDate = new com.toedter.calendar.JDateChooser();
         txtFdHour = new javax.swing.JTextField();
         btnSave = new javax.swing.JButton();
@@ -54,8 +79,6 @@ public class Appointment extends javax.swing.JPanel {
         setForeground(new java.awt.Color(153, 153, 153));
 
         lblDni.setText("CC");
-
-        lblName.setText("Nombre");
 
         lblService.setText("Servicio");
 
@@ -95,6 +118,11 @@ public class Appointment extends javax.swing.JPanel {
                 "Cedula", "Nombre", "Hora", "Profesional", "Servicio"
             }
         ));
+        tableAppointment.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tableAppointmentMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tableAppointment);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -106,37 +134,28 @@ public class Appointment extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(lblDni)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(txtFdDni, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(26, 26, 26))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(lblName)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnSave)
-                            .addComponent(txtFdName, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(lblHour)
-                        .addGap(9, 9, 9)
-                        .addComponent(txtFdHour, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
+                        .addComponent(txtFdDni, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(lblDate)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(25, 25, 25)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnModify)
+                            .addComponent(btnSave)
                             .addComponent(dChoDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addGap(17, 17, 17)
+                .addComponent(lblHour)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(91, 91, 91)
-                        .addComponent(btnDelete))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addComponent(lblService)
+                        .addComponent(txtFdHour, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(combxService, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(30, 30, 30))
+                        .addComponent(lblService))
+                    .addComponent(btnModify))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(combxService, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnDelete))
+                .addGap(19, 19, 19))
             .addComponent(jSeparator1)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
@@ -148,41 +167,43 @@ public class Appointment extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addGap(8, 8, 8)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(dChoDate, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(dChoDate, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(lblHour)
+                                    .addComponent(txtFdHour, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(lblService)
+                                    .addComponent(combxService, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(24, 24, 24)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnSave)
+                            .addComponent(btnModify)
+                            .addComponent(btnDelete))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(lblDni)
-                            .addComponent(lblHour)
-                            .addComponent(txtFdDni, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtFdHour, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblService)
-                            .addComponent(combxService, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblName)
-                            .addComponent(lblDate)
-                            .addComponent(txtFdName, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnSave)
-                    .addComponent(btnModify)
-                    .addComponent(btnDelete))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(txtFdDni, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(lblDate)
+                        .addGap(41, 41, 41)))
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 268, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 282, Short.MAX_VALUE)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
         if (dChoDate.getDate() != null) {
-            System.out.println("entro a dateConvert");
             String date = convertDate(dChoDate);
-            String[] data = new String[5];
+            String[] data = new String[4];
 
-            if (dataIsEmpity(data, date) == false && checkDniCustomers(txtFdDni.getText()) == true) {
-                System.out.println("entro dataIsEm y checkDNI");
+            if (dataIsEmpity(data, date) == true && checkDniCustomers(txtFdDni.getText()) == true) {
                 submitData(data);
             } else {
                 JOptionPane.showMessageDialog(this, dataIsEmpity(data, date) ? "CAMPOS VACIOS." : "USUARIO NO EXISTE", "Error", JOptionPane.ERROR_MESSAGE);
@@ -193,23 +214,47 @@ public class Appointment extends javax.swing.JPanel {
     }//GEN-LAST:event_btnSaveActionPerformed
 
     private void btnModifyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModifyActionPerformed
-        // TODO add your handling code here:
+        if (dChoDate.getDate() != null) {
+            String date = convertDate(dChoDate);
+            String[] data = new String[4];
+
+            if (dataIsEmpity(data, date) == true && checkDniCustomers(txtFdDni.getText()) == true) {
+                modifyData(data);
+            } else {
+                JOptionPane.showMessageDialog(this, dataIsEmpity(data, date) ? "CAMPOS VACIOS." : "USUARIO NO EXISTE", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "CAMPO FECHA VACIO.", "Error de campos sin llenar", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_btnModifyActionPerformed
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
-        // TODO add your handling code here:
+        deleteData();
     }//GEN-LAST:event_btnDeleteActionPerformed
+
+    private void tableAppointmentMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableAppointmentMouseClicked
+        //"ID" "DNI", "Nombre", "Fecha", "Hora", "Servicio", "Profesional" 
+
+        //Seleciona una fila y envia a los textfield
+        int selectedRow = tableAppointment.getSelectedRow();
+
+        String[] rowData = new String[tableAppointment.getColumnCount()];
+        for (int i = 0; i < tableAppointment.getColumnCount(); i++) {
+            rowData[i] = tableAppointment.getValueAt(selectedRow, i).toString();
+        }
+        setData(rowData);
+    }//GEN-LAST:event_tableAppointmentMouseClicked
 
     private boolean dataIsEmpity(String[] data, String date) {
         data[0] = txtFdDni.getText();
-        data[1] = txtFdName.getText();
-        data[2] = txtFdHour.getText();
-        data[3] = date;
-        data[4] = combxService.getSelectedItem().toString();
+        data[1] = txtFdHour.getText();
+        data[2] = date;
 
-        System.out.println("servicio " + data[4]);
+        String[] infService = combxService.getSelectedItem().toString().split("-");
 
-        if (data[0].isEmpty() == false && data[1].isEmpty() == false && data[2].isEmpty() == false && data[3].isEmpty() == false && data[4].isEmpty() == false) {
+        data[3] = infService[0].trim();
+
+        if (data[0].isEmpty() == false && data[1].isEmpty() == false && data[2].isEmpty() == false && data[3].isEmpty() == false) {
             return true;
         } else {
             JOptionPane.showMessageDialog(this, "CAMPOS VACIOS.", "Error de campos sin llenar", JOptionPane.ERROR_MESSAGE);
@@ -231,23 +276,62 @@ public class Appointment extends javax.swing.JPanel {
     }
 
     private void submitData(String[] data) {
-        //Hacer querys
         try {
-            String query = "INSERT INTO appointments (time, name, last_name, address, phone_number, email, specialty, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            String query = "INSERT INTO appointments (time, date, customers_dni, services_id) VALUES (?, ?, ?, ?)";
             PreparedStatement pst = cn.prepareStatement(query);
-            pst.setString(1, data[2]);
-            pst.setString(2, data[0]);
-            pst.setString(3, data[1]);
-            pst.setString(4, data[3]);
-            pst.setString(5, data[4]);
+            pst.setString(1, data[1]);
+            pst.setString(2, data[2]);
+            pst.setString(3, data[0]);
+            pst.setInt(4, Integer.valueOf(data[3]));
 
-            System.out.println(pst.executeUpdate());
+            pst.executeUpdate();
 
             pst.close();
         } catch (SQLException e) {
-            System.out.println(e);
+            e.printStackTrace();
         } finally {
-            con.desconectar();
+            fillTable();
+            clearData();
+        }
+    }
+
+    private void modifyData(String[] data) {
+        int selectedRow = tableAppointment.getSelectedRow();
+        try {
+            String query = "UPDATE appointments SET time = ?, date = ?, customers_dni = ?, services_id = ? WHERE id_appointments = ?";
+            PreparedStatement pst = cn.prepareStatement(query);
+            pst.setString(1, data[1]);
+            pst.setString(2, data[2]);
+            pst.setString(3, data[0]);
+            pst.setInt(4, Integer.valueOf(data[3]));
+            pst.setInt(5, Integer.valueOf(tableAppointment.getValueAt(selectedRow, 0).toString()));//id_appointments
+
+            pst.executeUpdate();
+
+            pst.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            clearData();
+            fillTable();
+        }
+    }
+
+    private void deleteData() {
+        int selectedRow = tableAppointment.getSelectedRow();
+
+        try {
+            String query = "DELETE FROM appointments WHERE id_appointments = ?";
+            PreparedStatement pst = cn.prepareStatement(query);
+            pst.setInt(1, Integer.valueOf(tableAppointment.getValueAt(selectedRow, 0).toString()));
+
+            pst.executeUpdate();
+
+            pst.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            fillTable();
         }
     }
 
@@ -269,20 +353,15 @@ public class Appointment extends javax.swing.JPanel {
             //SQLException
         } catch (SQLException ex) {
             ex.printStackTrace();
-        } finally {
-            con.desconectar();
         }
         return allow;
     }
 
-    private String[][] fillComboBoxs(JComboBox<String> services) {
+    private void fillComboBoxs(JComboBox<String> services) {
         try {
             String query = "SELECT s.id_services, s.type, s.professionals_dni, p.name, p.last_name FROM services AS s INNER JOIN professionals AS p ON s.professionals_dni = p.dni";
             PreparedStatement pst = cn.prepareStatement(query);
             ResultSet resultSet = pst.executeQuery();
-
-            // Initialize the two-dimensional array with an estimated size
-            String[][] serviceData = new String[100][4];
 
             // Iterate through the ResultSet and populate the array
             int rowIndex = 0;
@@ -300,14 +379,97 @@ public class Appointment extends javax.swing.JPanel {
                 rowIndex++;
             }
         } catch (SQLException e) {
-            System.out.println(e);
-        } finally {
-            con.desconectar();
+            e.printStackTrace();
         }
-
-        return serviceData;
     }
 
+    private void fillTable() {
+        //"ID" "DNI", "Nombre", "Fecha", "Hora", "Servicio", "Profesional" tabla
+        ta.setRowCount(0);
+        String[][] dataTbA = new String[100][6];
+
+        try {
+            String query = "SELECT id_appointments, time, date, customers_dni, services_id FROM appointments";
+            PreparedStatement pst = cn.prepareStatement(query);
+            ResultSet resultSet = pst.executeQuery();
+
+            int rowIndex = 0;
+            while (resultSet.next()) {
+
+                dataTbA[rowIndex][0] = String.valueOf(resultSet.getInt("id_appointments"));
+                dataTbA[rowIndex][1] = resultSet.getString("time");
+                dataTbA[rowIndex][2] = resultSet.getString("date");
+                dataTbA[rowIndex][3] = resultSet.getString("customers_dni");
+
+                //funcion extraer nombre de servicio y proessional
+                String[] namesServices = getNameServices(String.valueOf(resultSet.getInt("services_id"))).split("-");
+                dataTbA[rowIndex][4] = namesServices[0].trim();//servicio
+                dataTbA[rowIndex][5] = namesServices[1];//nombre profesional
+
+                ta.addRow(new Object[]{dataTbA[rowIndex][0], dataTbA[rowIndex][3], getNameCustomers(dataTbA[rowIndex][3]), dataTbA[rowIndex][2], dataTbA[rowIndex][1], dataTbA[rowIndex][4], dataTbA[rowIndex][5]});
+                rowIndex++;
+            }
+            resultSet.close();
+            pst.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setData(String[] data) {
+        //"ID" "DNI", "Nombre", "Fecha", "Hora", "Servicio", "Profesional"
+        txtFdDni.setText(data[1]);
+        txtFdHour.setText(data[4]);
+
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = dateFormat.parse(data[3]);
+            dChoDate.setDate(date);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void clearData() {
+        txtFdDni.setText("");
+        txtFdHour.setText("");
+        LocalDate fechaActual = LocalDate.now();
+        Date fechaDate = Date.from(fechaActual.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        dChoDate.setDate(fechaDate);
+    }
+
+    private String getNameCustomers(String dni) {
+        try {
+            String query = "SELECT name, last_name FROM customers WHERE dni = ?";
+            PreparedStatement pst = cn.prepareStatement(query);
+            pst.setString(1, dni);
+
+            ResultSet rs = pst.executeQuery();
+            while (rs.next()) {
+                return rs.getString("name") + " " + rs.getString("last_name");
+            }
+            rs.close();
+            pst.close();
+            //SQLException
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return "null";
+    }
+
+    private String getNameServices(String idService) {
+        //data[i][3] esta el nombre professional
+        //data[i][1] esta el tipo servicio
+        //data[i][0] esta el id servicios
+        for (int i = 0; i < serviceData.length; i++) {
+            if (serviceData[i][0].equals(idService)) {
+                return serviceData[i][1] + "-" + serviceData[i][3];
+            } else {
+                break;
+            }
+        }
+        return "null";
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnDelete;
@@ -320,11 +482,9 @@ public class Appointment extends javax.swing.JPanel {
     private javax.swing.JLabel lblDate;
     private javax.swing.JLabel lblDni;
     private javax.swing.JLabel lblHour;
-    private javax.swing.JLabel lblName;
     private javax.swing.JLabel lblService;
     private javax.swing.JTable tableAppointment;
     private javax.swing.JTextField txtFdDni;
     private javax.swing.JTextField txtFdHour;
-    private javax.swing.JTextField txtFdName;
     // End of variables declaration//GEN-END:variables
 }

@@ -133,7 +133,7 @@ public class Login extends javax.swing.JFrame {
         String dni = txtFieldDni.getText();
         String password = String.valueOf(txtFieldPassword.getPassword());
 
-        if (dni.equals("Admin") && password.equals("Admin")) {
+        if (dni.equals("1234") && password.equals("Admin")) {
             con.desconectar();
             Home home = new Home();
             home.setVisible(true);

@@ -5,31 +5,13 @@
 package spa;
 
 import java.awt.BorderLayout;
-import java.awt.Point;
-import javax.swing.JButton;
 import javax.swing.JPanel;
 
-public class HomeProfessionals extends Home {
-    
-    private Point location;
+public class HomeProfessionals extends javax.swing.JFrame {
 
-    /**
-     * Creates new form Home
-     */
     public HomeProfessionals() {
         initComponents();
         setLocationRelativeTo(null);
-        
-        location = getLocationFather(super.getButtonServices());
-        super.getButtonAppointment().setLocation(location);
-        
-        location = getLocationFather(super.getButtonClients());
-        super.getButtonReports().setLocation(location);
-        
-        super.getButtonServices().setVisible(false);
-        super.getButtonProfessionals().setVisible(false);
-        super.getButtonClients().setVisible(false);
-        
     }
 
     /**
@@ -41,21 +23,88 @@ public class HomeProfessionals extends Home {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        lbTitle = new javax.swing.JLabel();
+        btnAppointment = new javax.swing.JButton();
+        btnReports = new javax.swing.JButton();
+        jpContainer = new javax.swing.JPanel();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        lbTitle.setFont(new java.awt.Font("Segoe UI", 3, 50)); // NOI18N
+        lbTitle.setText("SPA");
+
+        btnAppointment.setText("Citas");
+        btnAppointment.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAppointmentActionPerformed(evt);
+            }
+        });
+
+        btnReports.setText("Informes");
+        btnReports.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnReportsActionPerformed(evt);
+            }
+        });
+
+        jpContainer.setBackground(new java.awt.Color(153, 153, 153));
+
+        javax.swing.GroupLayout jpContainerLayout = new javax.swing.GroupLayout(jpContainer);
+        jpContainer.setLayout(jpContainerLayout);
+        jpContainerLayout.setHorizontalGroup(
+            jpContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        jpContainerLayout.setVerticalGroup(
+            jpContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 415, Short.MAX_VALUE)
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 730, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(183, Short.MAX_VALUE)
+                .addComponent(btnAppointment, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(35, 35, 35)
+                        .addComponent(lbTitle))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(164, 164, 164)
+                        .addComponent(btnReports, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(179, 179, 179))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jpContainer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 540, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(5, 5, 5)
+                .addComponent(lbTitle)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnAppointment)
+                    .addComponent(btnReports))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jpContainer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnAppointmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAppointmentActionPerformed
+        AppointmentProfessionals ap = new AppointmentProfessionals();
+        showPanel(ap);
+    }//GEN-LAST:event_btnAppointmentActionPerformed
+
+    private void btnReportsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportsActionPerformed
+
+    }//GEN-LAST:event_btnReportsActionPerformed
 
     /**
      * @param args the command line arguments
@@ -92,13 +141,21 @@ public class HomeProfessionals extends Home {
             }
         });
     }
-    
-    public Point getLocationFather(JButton button){
-        Point location = button.getLocation();
-        return location;
-    } 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAppointment;
+    private javax.swing.JButton btnReports;
+    private javax.swing.JPanel jpContainer;
+    private javax.swing.JLabel lbTitle;
     // End of variables declaration//GEN-END:variables
 
+    private void showPanel(JPanel p) {
+        p.setSize(725, 415);
+        p.setLocation(0, 0);
+
+        jpContainer.removeAll();
+        jpContainer.add(p, BorderLayout.CENTER);
+        jpContainer.revalidate();
+        jpContainer.repaint();
+    }
 }

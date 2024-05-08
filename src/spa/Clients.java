@@ -4,16 +4,34 @@
  */
 package spa;
 
-import com.toedter.calendar.JDateChooser;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import javax.swing.JComboBox;
+import config.Connections;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 public class Clients extends javax.swing.JPanel {
 
+    Connections con = new Connections();
+    Connection cn = con.conectar();
+
+    DefaultTableModel ta = new DefaultTableModel() {
+
+        public boolean isCellEditable(int rows, int columns) {//Celdas no editables
+            return false;
+        }
+    };
+
     public Clients() {
         initComponents();
+
+        String[] columnNames = {"Cedula", "Nombre", "Telefono", "Dirección", "Email"};
+        ta.setColumnIdentifiers(columnNames);
+        tableClients.setModel(ta);
+
+        fillTable();
     }
 
     /**
@@ -36,13 +54,13 @@ public class Clients extends javax.swing.JPanel {
         btnDelete = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JSeparator();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tableAppointment = new javax.swing.JTable();
+        tableClients = new javax.swing.JTable();
         lblLastName = new javax.swing.JLabel();
         txtFdLastName = new javax.swing.JTextField();
         txtFdPhone = new javax.swing.JFormattedTextField();
         lblPhone = new javax.swing.JLabel();
         lblEmail = new javax.swing.JLabel();
-        txtFdAddress1 = new javax.swing.JTextField();
+        txtFdEmail = new javax.swing.JTextField();
 
         setBackground(new java.awt.Color(153, 153, 153));
         setForeground(new java.awt.Color(153, 153, 153));
@@ -74,7 +92,7 @@ public class Clients extends javax.swing.JPanel {
             }
         });
 
-        tableAppointment.setModel(new javax.swing.table.DefaultTableModel(
+        tableClients.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -85,15 +103,16 @@ public class Clients extends javax.swing.JPanel {
                 "Cedula", "Nombre", "Telefono", "Dirección"
             }
         ));
-        jScrollPane1.setViewportView(tableAppointment);
+        tableClients.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tableClientsMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tableClients);
 
         lblLastName.setText("Apellido");
 
-        try {
-            txtFdPhone.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##########")));
-        } catch (java.text.ParseException ex) {
-            ex.printStackTrace();
-        }
+        txtFdPhone.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
 
         lblPhone.setText("Telefono");
 
@@ -138,7 +157,7 @@ public class Clients extends javax.swing.JPanel {
                         .addGap(27, 27, 27)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(btnDelete)
-                            .addComponent(txtFdAddress1, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(txtFdEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(29, 29, 29))
             .addComponent(jSeparator1)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
@@ -169,7 +188,7 @@ public class Clients extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(lblEmail)
-                            .addComponent(txtFdAddress1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtFdEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lblAddress)
                             .addComponent(txtFdAddress, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(18, 18, 18)
@@ -187,49 +206,177 @@ public class Clients extends javax.swing.JPanel {
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
         String[] data = new String[6];
-        System.out.println(dataIsEmpity(data));
-    }//GEN-LAST:event_btnSaveActionPerformed
+        if (dataIsEmpity(data) == true) {
+            submitData(data);
 
-    private void btnModifyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModifyActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnModifyActionPerformed
-
-    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnDeleteActionPerformed
-
-    private boolean dataIsEmpity(String[] data) {
-        data[0] = txtFdDni.getText();
-        data[1] = txtFdName.getText();
-        data[2] = txtFdAddress.getText();
-        
-        if ((data[0].isEmpty() == true && data[1].isEmpty() == true && data[2].isEmpty() == true && data[3].isEmpty() == true && data[4]!= "null" && data[5] != "null")){
-            return true;
         } else {
             JOptionPane.showMessageDialog(this, "CAMPOS VACIOS.", "Error de campos sin llenar", JOptionPane.ERROR_MESSAGE);
         }
+    }//GEN-LAST:event_btnSaveActionPerformed
+
+    private void btnModifyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModifyActionPerformed
+        String[] data = new String[6];
+        if (dataIsEmpity(data) == true) {
+            modifyData(data);
+
+        } else {
+            JOptionPane.showMessageDialog(this, "CAMPOS VACIOS.", "Error de campos sin llenar", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnModifyActionPerformed
+
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+        deleteData();
+    }//GEN-LAST:event_btnDeleteActionPerformed
+
+    private void tableClientsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableClientsMouseClicked
+        //Seleciona una fila y envia a los textfield
+        int selectedRow = tableClients.getSelectedRow();
+        String[] rowData = new String[6];
+
+        for (int i = 0, j = 0; i < tableClients.getColumnCount(); i++, j++) {
+            String cellValue = tableClients.getValueAt(selectedRow, i).toString();
+
+            if (i == 1) {
+                String[] namesCustomers = cellValue.split(" ");
+                rowData[j] = namesCustomers[0].trim();
+                rowData[j + 1] = namesCustomers[1].trim();
+            } else if (i == 2) {
+                rowData[j + 1] = cellValue;
+                j = 3; // Saltar al siguiente índice
+            } else {
+                rowData[j] = cellValue;
+            }
+        }
+        setData(rowData);
+    }//GEN-LAST:event_tableClientsMouseClicked
+
+    private boolean dataIsEmpity(String[] data) {
+        //dni, name, last_name, address, phone_number, email
+        data[0] = txtFdDni.getText();
+        data[1] = txtFdName.getText();
+        data[2] = txtFdLastName.getText();
+        data[3] = txtFdAddress.getText();
+        data[4] = txtFdPhone.getText();
+        data[5] = txtFdEmail.getText();
+
+        if ((data[0].isEmpty() == false && data[1].isEmpty() == false && data[2].isEmpty() == false && data[3].isEmpty() == false && data[4].isEmpty() == false && data[5].isEmpty() == false)) {
+            return true;
+        } else {
+            JOptionPane.showMessageDialog(this, "CAMPOS VACIONS.", "Error de campos sin llenar", JOptionPane.ERROR_MESSAGE);
+        }
         return false;
     }
-    
-    private String convertDate(JDateChooser date){
-        String dateString;
+
+    private void submitData(String[] data) {
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            Date selectedDate = date.getDate();
-            dateString = sdf.format(selectedDate);
-            return dateString;
-        } catch (Exception e) {
-            e.printStackTrace();
+            String query = "INSERT INTO customers (dni, name, last_name, address, phone_number, email) VALUES (?, ?, ?, ?, ?, ?)";
+            PreparedStatement pst = cn.prepareStatement(query);
+            pst.setString(1, data[0]);
+            pst.setString(2, data[1]);
+            pst.setString(3, data[2]);
+            pst.setString(4, data[3]);
+            pst.setString(5, data[4]);
+            pst.setString(6, data[5]);
+
+            System.out.println(pst.executeUpdate());
+
+            pst.close();
+        } catch (SQLException e) {
+            System.out.println(e);
+        } finally {
+            fillTable();
         }
-        return "";
     }
-    
-    public void fillServices(JComboBox<String> services){
-        services.addItem("depilada");
+
+    private void modifyData(String[] data) {
+        //dni, name, last_name, address, phone_number, email
+        int selectedRow = tableClients.getSelectedRow();
+
+        try {
+            String query = "UPDATE customers SET dni = ?, name = ?, last_name = ?, address = ?, phone_number = ?, email = ? WHERE dni = ?";
+            PreparedStatement pst = cn.prepareStatement(query);
+            pst.setString(1, data[0]);
+            pst.setString(2, data[1]);
+            pst.setString(3, data[2]);
+            pst.setString(4, data[3]);
+            pst.setString(5, data[4]);
+            pst.setString(6, data[5]);
+            pst.setString(7, tableClients.getValueAt(selectedRow, 0).toString());
+
+            System.out.println("Filas actualizadas: " + pst.executeUpdate());
+
+            pst.close();
+        } catch (SQLException e) {
+            System.out.println(e);
+        } finally {
+            clearData();
+            fillTable();
+        }
     }
-    
-     public void fillProfessional(JComboBox<String> services){
-        services.addItem("LUKAS");
+
+    private void deleteData() {
+        int selectedRow = tableClients.getSelectedRow();
+
+        try {
+            String query = "DELETE FROM customers WHERE dni = ?";
+            PreparedStatement pst = cn.prepareStatement(query);
+            pst.setString(1, tableClients.getValueAt(selectedRow, 0).toString());
+
+            System.out.println("Filas actualizadas: " + pst.executeUpdate());
+
+            pst.close();
+        } catch (SQLException e) {
+            System.out.println(e);
+        } finally {
+            clearData();
+            fillTable();
+        }
+    }
+
+    private void fillTable() {
+        ta.setRowCount(0);
+        String[][] dataTbA = new String[100][5];
+        try {
+            String query = "SELECT dni, name, last_name, address, phone_number, email FROM customers";
+            PreparedStatement pst = cn.prepareStatement(query);
+            ResultSet resultSet = pst.executeQuery();
+
+            // Iterate through the ResultSet and populate the array
+            int rowIndex = 0;
+            while (resultSet.next()) {
+
+                dataTbA[rowIndex][0] = resultSet.getString("dni");;
+                dataTbA[rowIndex][1] = resultSet.getString("name") + " " + resultSet.getString("last_name");
+                dataTbA[rowIndex][2] = resultSet.getString("address");
+                dataTbA[rowIndex][3] = resultSet.getString("phone_number");
+                dataTbA[rowIndex][4] = resultSet.getString("email");
+
+                ta.addRow(new Object[]{dataTbA[rowIndex][0], dataTbA[rowIndex][1], dataTbA[rowIndex][3], dataTbA[rowIndex][2], dataTbA[rowIndex][4]});
+                rowIndex++;
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+    }
+
+    private void setData(String[] data) {
+        //dni, name, last_name, address, phone_number, email
+        txtFdDni.setText(data[0]);
+        txtFdName.setText(data[1]);
+        txtFdLastName.setText(data[2]);
+        txtFdAddress.setText(data[4]);
+        txtFdPhone.setText(data[3]);
+        txtFdEmail.setText(data[5]);
+    }
+
+    private void clearData() {
+        //dni, name, last_name, address, phone_number, email
+        txtFdDni.setText("");
+        txtFdName.setText("");
+        txtFdLastName.setText("");
+        txtFdAddress.setText("");
+        txtFdPhone.setText("");
+        txtFdEmail.setText("");
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -244,10 +391,10 @@ public class Clients extends javax.swing.JPanel {
     private javax.swing.JLabel lblLastName;
     private javax.swing.JLabel lblName;
     private javax.swing.JLabel lblPhone;
-    private javax.swing.JTable tableAppointment;
+    private javax.swing.JTable tableClients;
     private javax.swing.JTextField txtFdAddress;
-    private javax.swing.JTextField txtFdAddress1;
     private javax.swing.JTextField txtFdDni;
+    private javax.swing.JTextField txtFdEmail;
     private javax.swing.JTextField txtFdLastName;
     private javax.swing.JTextField txtFdName;
     private javax.swing.JFormattedTextField txtFdPhone;

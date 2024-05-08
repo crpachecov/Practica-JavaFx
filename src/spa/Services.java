@@ -4,17 +4,35 @@
  */
 package spa;
 
-import com.toedter.calendar.JDateChooser;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import config.Connections;
+import java.sql.*;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 public class Services extends javax.swing.JPanel {
 
+    private String[][] professionalData = new String[100][3];
+
+    Connections con = new Connections();
+    Connection cn = con.conectar();
+
+    DefaultTableModel ta = new DefaultTableModel() {
+
+        public boolean isCellEditable(int rows, int columns) {//Celdas no editables
+            return false;
+        }
+    };
+
     public Services() {
         initComponents();
-        fillProfessional(combxProfessional);
+
+        String[] columnNames = {"ID", "Tipo de Servicio", "Duración", "Precio", "Descripción", "DNI Profesional"};
+        ta.setColumnIdentifiers(columnNames);
+        tableServices.setModel(ta);
+
+        fillComboBoxs(combxProfessional);
+        fillTable();
     }
 
     /**
@@ -38,11 +56,11 @@ public class Services extends javax.swing.JPanel {
         btnDelete = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JSeparator();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tableAppointment = new javax.swing.JTable();
+        tableServices = new javax.swing.JTable();
         combxProfessional = new javax.swing.JComboBox<>();
-        fdPrice = new javax.swing.JFormattedTextField();
         jScrollPane2 = new javax.swing.JScrollPane();
         txtAreaDescription = new javax.swing.JTextArea();
+        fdPrice = new javax.swing.JTextField();
 
         setBackground(new java.awt.Color(153, 153, 153));
         setForeground(new java.awt.Color(153, 153, 153));
@@ -78,8 +96,14 @@ public class Services extends javax.swing.JPanel {
             }
         });
 
-        tableAppointment.setModel(new javax.swing.table.DefaultTableModel(
+        tableServices.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
                 {null, null, null, null, null},
                 {null, null, null, null, null},
                 {null, null, null, null, null},
@@ -88,10 +112,24 @@ public class Services extends javax.swing.JPanel {
             new String [] {
                 "Tipo de Servicio", "Duración", "Precio", "Profesional", "Descripción"
             }
-        ));
-        jScrollPane1.setViewportView(tableAppointment);
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+            };
 
-        fdPrice.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("¤¤#,##0"))));
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+        });
+        tableServices.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
+        tableServices.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tableServicesMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tableServices);
+
+        combxProfessional.setFont(new java.awt.Font("Segoe UI", 0, 11)); // NOI18N
 
         txtAreaDescription.setColumns(20);
         txtAreaDescription.setLineWrap(true);
@@ -104,40 +142,38 @@ public class Services extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jSeparator1)
             .addGroup(layout.createSequentialGroup()
+                .addGap(16, 16, 16)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblTypeService)
+                    .addComponent(lblDuration))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(27, 27, 27)
+                        .addComponent(btnSave)
+                        .addGap(164, 164, 164)
+                        .addComponent(btnModify))
+                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblDuration)
-                            .addComponent(lblTypeService))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnSave)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(txtFdDuration, javax.swing.GroupLayout.DEFAULT_SIZE, 145, Short.MAX_VALUE)
-                                .addComponent(txtFdTypeService)))
+                            .addComponent(txtFdDuration, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtFdTypeService, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblPrice)
-                            .addComponent(lblProfessional, javax.swing.GroupLayout.Alignment.TRAILING))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(combxProfessional, 0, 140, Short.MAX_VALUE)
-                                    .addComponent(fdPrice))
-                                .addGap(18, 18, 18)
-                                .addComponent(lblDescription))
-                            .addComponent(btnModify))
+                            .addComponent(lblProfessional))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnDelete)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(10, 10, 10))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jScrollPane1)))
-                .addContainerGap())
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(combxProfessional, 0, 174, Short.MAX_VALUE)
+                            .addComponent(fdPrice))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(lblDescription)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnDelete)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(10, 10, 10))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -165,10 +201,10 @@ public class Services extends javax.swing.JPanel {
                         .addContainerGap()
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnDelete)
                     .addComponent(btnSave)
-                    .addComponent(btnModify)
-                    .addComponent(btnDelete))
+                    .addComponent(btnModify))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -179,16 +215,41 @@ public class Services extends javax.swing.JPanel {
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
         String[] data = new String[5];
-        System.out.println(dataIsEmpity(data));
+        if (dataIsEmpity(data) == true) {
+            submitData(data);
+
+        } else {
+            JOptionPane.showMessageDialog(this, "CAMPOS VACIOS.", "Error de campos sin llenar", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_btnSaveActionPerformed
 
     private void btnModifyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModifyActionPerformed
-        // TODO add your handling code here:
+        String[] data = new String[5];
+        if (dataIsEmpity(data) == true) {
+            modifyData(data);
+
+        } else {
+            JOptionPane.showMessageDialog(this, "CAMPOS VACIOS.", "Error de campos sin llenar", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_btnModifyActionPerformed
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
         // TODO add your handling code here:
+        deleteData();
     }//GEN-LAST:event_btnDeleteActionPerformed
+
+    private void tableServicesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableServicesMouseClicked
+        //"ID", "Tipo de Servicio", "Duración", "Precio", "Descripción", "DNI Profesional"
+        //Seleciona una fila y envia a los textfield
+        int selectedRow = tableServices.getSelectedRow();
+        //System.out.println(tableAppointment.getValueAt(selectedRow, 0));
+        String[] rowData = new String[tableServices.getColumnCount()];
+        for (int i = 0; i < tableServices.getColumnCount(); i++) {
+            rowData[i] = tableServices.getValueAt(selectedRow, i).toString();
+            System.out.println(rowData[i]);
+        }
+        setData(rowData);
+    }//GEN-LAST:event_tableServicesMouseClicked
 
     private boolean dataIsEmpity(String[] data) {
         data[0] = txtFdTypeService.getText();
@@ -197,7 +258,9 @@ public class Services extends javax.swing.JPanel {
         data[3] = combxProfessional.getSelectedItem().toString();
         data[4] = txtAreaDescription.getText();
 
-        if ((data[0].isEmpty() == true && data[1].isEmpty() == true && data[2].isEmpty() == true && data[3] != "null" && data[4].isEmpty() == true)) {
+        if ((data[0].isEmpty() == false && data[1].isEmpty() == false && data[2].isEmpty() == false && data[3].isEmpty() == false && data[4].isEmpty() == false)) {
+            String[] infProfe = data[3].split("-");
+            data[3] = infProfe[0].trim();
             return true;
         } else {
             JOptionPane.showMessageDialog(this, "CAMPOS VACIONS.", "Error de campos sin llenar", JOptionPane.ERROR_MESSAGE);
@@ -205,16 +268,143 @@ public class Services extends javax.swing.JPanel {
         return false;
     }
 
-    public void fillProfessional(JComboBox<String> services) {
-        services.addItem("LUKAS");
+    private void submitData(String[] data) {
+        try {
+            String query = "INSERT INTO services (type, duration, price, description, professionals_dni) VALUES (?, ?, ?, ?, ?)";
+            PreparedStatement pst = cn.prepareStatement(query);
+            pst.setString(1, data[0]);
+            pst.setString(2, data[1]);
+            pst.setString(3, data[2]);
+            pst.setString(4, data[4]);
+            pst.setString(5, data[3]);
+
+            System.out.println(pst.executeUpdate());
+
+            pst.close();
+        } catch (SQLException e) {
+            System.out.println(e);
+        } finally {
+            fillTable();
+        }
     }
+
+    private void modifyData(String[] data) {
+        int selectedRow = tableServices.getSelectedRow();
+        try {
+            String query = "UPDATE services SET type = ?, duration = ?, price = ?, description = ?, professionals_dni = ? WHERE id_services = ?";
+            PreparedStatement pst = cn.prepareStatement(query);
+            pst.setString(1, data[0]);
+            pst.setString(2, data[1]);
+            pst.setString(3, data[2]);
+            pst.setString(4, data[4]);
+            pst.setString(5, data[3]);
+            pst.setInt(6, Integer.valueOf(tableServices.getValueAt(selectedRow, 0).toString()));//id_services
+
+            System.out.println("Filas actualizadas: " + pst.executeUpdate());
+
+            pst.close();
+        } catch (SQLException e) {
+            System.out.println(e);
+        } finally {
+            clearData();
+            fillTable();
+        }
+    }
+
+    private void deleteData() {
+        int selectedRow = tableServices.getSelectedRow();
+
+        try {
+            String query = "DELETE FROM services WHERE id_services = ?";
+            PreparedStatement pst = cn.prepareStatement(query);
+            pst.setInt(1, Integer.valueOf(tableServices.getValueAt(selectedRow, 0).toString()));//id_services
+
+            System.out.println("Filas actualizadas: " + pst.executeUpdate());
+
+            pst.close();
+        } catch (SQLException e) {
+            System.out.println(e);
+        } finally {
+            clearData();
+            fillTable();
+        }
+    }
+
+    private void fillComboBoxs(JComboBox<String> professional) {
+        try {
+            String query = "SELECT dni, name, last_name, specialty FROM professionals";
+            PreparedStatement pst = cn.prepareStatement(query);
+            ResultSet resultSet = pst.executeQuery();
+
+            // Iterate through the ResultSet and populate the array
+            int rowIndex = 0;
+            while (resultSet.next()) {
+
+                professionalData[rowIndex][0] = resultSet.getString("dni");
+                professionalData[rowIndex][1] = resultSet.getString("name") + " " + resultSet.getString("last_name");
+                professionalData[rowIndex][2] = resultSet.getString("specialty");
+
+                if (!resultSet.wasNull()) {
+                    professional.addItem(professionalData[rowIndex][0] + "-" + professionalData[rowIndex][1]+ "-" + professionalData[rowIndex][2]);
+                }
+
+                rowIndex++;
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+    }
+
+    private void fillTable() {
+        ta.setRowCount(0);
+        String[][] dataTbA = new String[100][6];
+        try {
+            String query = "SELECT id_services, type, duration, price, description, professionals_dni FROM services";
+            PreparedStatement pst = cn.prepareStatement(query);
+            ResultSet resultSet = pst.executeQuery();
+
+            // Iterate through the ResultSet and populate the array
+            int rowIndex = 0;
+            while (resultSet.next()) {
+
+                dataTbA[rowIndex][0] = String.valueOf(resultSet.getInt("id_services"));
+                dataTbA[rowIndex][1] = resultSet.getString("type");
+                dataTbA[rowIndex][2] = resultSet.getString("duration");
+                dataTbA[rowIndex][3] = resultSet.getString("price");
+                dataTbA[rowIndex][4] = resultSet.getString("description");
+                dataTbA[rowIndex][5] = resultSet.getString("professionals_dni");
+
+                ta.addRow(new Object[]{dataTbA[rowIndex][0], dataTbA[rowIndex][1], dataTbA[rowIndex][2], dataTbA[rowIndex][3], dataTbA[rowIndex][4], dataTbA[rowIndex][5]});
+                rowIndex++;
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+    }
+
+    private void setData(String[] data) {
+        //ID,"Tipo de Servicio", "Duración", "Precio", "Descripción", "DNI Profesional"
+        txtFdTypeService.setText(data[1]);
+        txtFdDuration.setText(data[2]);
+        fdPrice.setText(data[3]);
+        txtAreaDescription.setText(data[4]);
+    }
+
+    private void clearData() {
+        //ID,"Tipo de Servicio", "Duración", "Precio", "Descripción", "DNI Profesional"
+        txtFdTypeService.setText("");
+        txtFdDuration.setText("");
+        fdPrice.setText("");
+        txtAreaDescription.setText("");
+    }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnDelete;
     private javax.swing.JButton btnModify;
     private javax.swing.JButton btnSave;
     private javax.swing.JComboBox<String> combxProfessional;
-    private javax.swing.JFormattedTextField fdPrice;
+    private javax.swing.JTextField fdPrice;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSeparator jSeparator1;
@@ -223,7 +413,7 @@ public class Services extends javax.swing.JPanel {
     private javax.swing.JLabel lblPrice;
     private javax.swing.JLabel lblProfessional;
     private javax.swing.JLabel lblTypeService;
-    private javax.swing.JTable tableAppointment;
+    private javax.swing.JTable tableServices;
     private javax.swing.JTextArea txtAreaDescription;
     private javax.swing.JTextField txtFdDuration;
     private javax.swing.JTextField txtFdTypeService;

@@ -23,18 +23,24 @@ DROP TABLE IF EXISTS `appointments`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `appointments` (
-  `id_appointments` int NOT NULL,
+  `id_appointments` int NOT NULL AUTO_INCREMENT,
   `time` varchar(45) NOT NULL,
   `date` varchar(45) NOT NULL,
   `customers_dni` varchar(10) NOT NULL,
-  `services_id_services` int NOT NULL,
-  PRIMARY KEY (`id_appointments`),
-  KEY `fk_appointments_customers_idx` (`customers_dni`),
-  KEY `fk_appointments_services1_idx` (`services_id_services`),
-  CONSTRAINT `fk_appointments_customers` FOREIGN KEY (`customers_dni`) REFERENCES `mydb`.`customers` (`dni`),
-  CONSTRAINT `fk_appointments_services1` FOREIGN KEY (`services_id_services`) REFERENCES `mydb`.`services` (`id_services`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+  `services_id` int NOT NULL,
+  PRIMARY KEY (`id_appointments`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `appointments`
+--
+
+LOCK TABLES `appointments` WRITE;
+/*!40000 ALTER TABLE `appointments` DISABLE KEYS */;
+INSERT INTO `appointments` VALUES (6,'3 pm','2024-05-08','54321098',3);
+/*!40000 ALTER TABLE `appointments` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `customers`
@@ -53,6 +59,16 @@ CREATE TABLE `customers` (
   PRIMARY KEY (`dni`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `customers`
+--
+
+LOCK TABLES `customers` WRITE;
+/*!40000 ALTER TABLE `customers` DISABLE KEYS */;
+INSERT INTO `customers` VALUES ('54321098','Carlos','Gómez','Avenida 34 Sur #12-34','321098765','carlos.gomez@email.com');
+/*!40000 ALTER TABLE `customers` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `professionals`
@@ -75,6 +91,16 @@ CREATE TABLE `professionals` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `professionals`
+--
+
+LOCK TABLES `professionals` WRITE;
+/*!40000 ALTER TABLE `professionals` DISABLE KEYS */;
+INSERT INTO `professionals` VALUES ('12345678','Juan','Pérez','Calle 123, Ciudad','987654321','juan.perez@email.com','Masajes','secreta123'),('56878545','María ','Rodríguez','Calle 321 #9','876543210','maria.rodriguez@email.com','Moldeamiento','Moldeo123'),('87654321','Laura ','Martínez','Carrera 67 #12-34','765432109','laura.martinez@email.com','Acupuntura','secreta456');
+/*!40000 ALTER TABLE `professionals` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `services`
 --
 
@@ -82,17 +108,25 @@ DROP TABLE IF EXISTS `services`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `services` (
-  `id_services` int NOT NULL,
+  `id_services` int NOT NULL AUTO_INCREMENT,
   `type` varchar(45) NOT NULL,
   `duration` varchar(45) NOT NULL,
   `price` varchar(45) NOT NULL,
   `description` varchar(255) NOT NULL,
   `professionals_dni` varchar(10) NOT NULL,
-  PRIMARY KEY (`id_services`),
-  KEY `fk_services_professionals1_idx` (`professionals_dni`),
-  CONSTRAINT `fk_services_professionals1` FOREIGN KEY (`professionals_dni`) REFERENCES `mydb`.`professionals` (`dni`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+  PRIMARY KEY (`id_services`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `services`
+--
+
+LOCK TABLES `services` WRITE;
+/*!40000 ALTER TABLE `services` DISABLE KEYS */;
+INSERT INTO `services` VALUES (3,'Masaje General','4 horas','150000','Masaje con esencias de chocolate','12345678');
+/*!40000 ALTER TABLE `services` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -103,4 +137,4 @@ CREATE TABLE `services` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-04-29 15:02:33
+-- Dump completed on 2024-05-08 11:00:00
